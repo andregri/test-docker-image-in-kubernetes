@@ -9,10 +9,12 @@ spec:
     command:
     - sh
     - -c
-    - /tools/goss
+    - /tools/goss -g /test/goss.yaml validate
     volumeMounts:
     - name: goss
       mountPath: /tools
+    - name: test-file
+      mountPath: /test
   initContainers:
   - name: download-goss
     image: busybox
@@ -26,4 +28,7 @@ spec:
   volumes:
   - name: goss
     emptyDir: {}
+  - name: test-file
+    configMap:
+      name: test-cm
   restartPolicy: Never
