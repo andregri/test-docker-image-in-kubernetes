@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: main
+        image: busybox
+        command:
+        - sh
+        - -c
+        - /tools/goss -g /test/goss.yaml validate
+        volumeMounts:
+        - name: goss
+          mountPath: /tools
+        - name: test-file
+          mountPath: /test
+      initContainers:
+      - name: download-goss
+        image: busybox
+        command:
+        - sh
+        - -c
+        - wget https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -O /tools/goss; chmod +rx /tools/goss
+        volumeMounts:
+        - name: goss
+          mountPath: /tools
+      volumes:
+      - name: goss
+        emptyDir: {}
+      - name: test-file
+        configMap:
+          name: test-cm
+      restartPolicy: Never
+  backoffLimit: 1
+
