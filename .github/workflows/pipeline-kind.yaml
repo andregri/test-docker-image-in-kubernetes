@@ -1,0 +1,25 @@
+name: Run tests in KinD
+
+on:
+- push
+- workflow_dispatch
+
+jobs:
+  run-test-with-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.4.0
+
+      - name: Create ConfigMap with goss tests
+        run: kubectl apply -f goss-test-cm.yaml
+
+      - name: Apply job to run goss tests
+        run: |
+          kubectl apply -f job-init-container/job.yaml
+          kubectl wait --for=condition=complete job/test-job
