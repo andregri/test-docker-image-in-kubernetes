@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-cm
+data:
+  goss.yaml: |
+    file:
+      /bin/wget:
+        exists: true
+        mode: "0755"
+        size: 0
+        owner: root
+        group: root
+        filetype: file
+        contains: []
