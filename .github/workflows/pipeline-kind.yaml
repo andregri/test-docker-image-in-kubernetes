@@ -64,7 +64,7 @@ jobs:
           kubectl get pod
 
   fail-test-with-pod:
-    needs: run-test-with-job
+    needs: run-test-with-pod
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
