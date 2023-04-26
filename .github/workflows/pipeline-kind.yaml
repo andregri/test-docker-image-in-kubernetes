@@ -42,7 +42,7 @@ jobs:
       - name: Apply job to run goss tests
         run: |
           kubectl apply -f job-init-container/job.yaml
-          kubectl wait --for=condition=complete job/test-job
+          ! kubectl wait --for=condition=complete job/test-job
 
   run-test-with-pod:
     runs-on: ubuntu-latest
@@ -61,6 +61,7 @@ jobs:
       - name: Apply job to run goss tests
         run: |
           kubectl apply -f job-init-container/job.yaml
+          sleep 60
           kubectl get pod
 
   fail-test-with-pod:
@@ -81,4 +82,5 @@ jobs:
       - name: Apply job to run goss tests
         run: |
           kubectl apply -f job-init-container/job.yaml
+          sleep 60
           kubectl get pod
