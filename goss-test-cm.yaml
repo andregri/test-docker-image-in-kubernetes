@@ -8,7 +8,6 @@ data:
       /bin/wget:
         exists: true
         mode: "0755"
-        size: 1029632
         owner: root
         group: root
         filetype: file
