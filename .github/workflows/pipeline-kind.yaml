@@ -61,8 +61,8 @@ jobs:
       - name: Apply job to run goss tests
         run: |
           kubectl apply -f pod-init-container/pod.yaml
-          kubectl get pod/test -o yaml
-          kubectl wait --for=jsonpath='{.status.containerStatuses[0].state.terminated.exitCode}'=0 pod/test
+          kubectl wait --for=jsonpath='{.status.phase}'=Succeeded pod/test
+          kubectl get pod/test --output=jsonpath='{.status.containerStatuses[0].state.terminated.exitCode}'
 
   fail-test-with-pod:
     needs: run-test-with-pod
@@ -82,5 +82,6 @@ jobs:
       - name: Apply job to run goss tests
         run: |
           kubectl apply -f pod-init-container/pod.yaml
-          ! kubectl wait --for=jsonpath='{.status.containerStatuses[0].state.terminated.exitCode}'=0 pod/test
+          ! kubectl wait --for=jsonpath='{.status.phase}'=Succeeded pod/test
+          kubectl get pod/test --output=jsonpath='{.status.containerStatuses[0].state.terminated.exitCode}'
           kubectl logs pod/test
