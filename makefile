@@ -1,2 +1,2 @@
 test:
-	kubectl kuttl test --start-kind=true ./tests/e2e/
+	kubectl kuttl test --start-kind=true ./tests/e2e/kuttl
