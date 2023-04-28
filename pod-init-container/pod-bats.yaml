@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-bats
+spec:
+  containers:
+  - name: main
+    image: bash
+    command:
+    - sh
+    - -c
+    - /opt/bats-test-helpers/bats-core/bin/bats /opt/bats-test-helpers/bats-core/docs/examples
+    volumeMounts:
+    - name: bats
+      mountPath: /opt/bats-test-helpers
+    - name: test-file
+      mountPath: /test
+  initContainers:
+  - name: download-bats
+    image: alpine/git
+    command:
+    - sh
+    - -c
+    - cd /tools && git clone https://github.com/bats-core/bats-core.git && chmod +x bats-core/bin/bats && git clone https://github.com/bats-core/bats-assert && git clone https://github.com/bats-core/bats-file  && git clone https://github.com/lox/bats-mock 
+    volumeMounts:
+    - name: bats
+      mountPath: /tools
+    - name: tests
+      mountPath: /tests
+  volumes:
+  - name: tests
+    emptyDir: {}
+  - name: bats
+    emptyDir: {}
+  - name: test-file
+    configMap:
+      name: test-cm
+  restartPolicy: Never
